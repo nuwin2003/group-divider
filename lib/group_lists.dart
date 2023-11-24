@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:group_devider/group_divider.dart';
 
@@ -18,37 +20,30 @@ class _GroupListsState extends State<GroupLists> {
     divideToGroups();
   }
 
-  var numberOfGroups = 0;
-  var remainingMembers = 0;
-
   List<List<String>> groups = [];
 
-  void divideGroups(List<String> group) {
-    setState(() {
-      groups.add(group);
-      print(groups);
-    });
-  }
-
+  //Used Logic
   void divideToGroups() {
     setState(() {
-      if (widget.memberList.length % 5 == 0) {
-        numberOfGroups = (widget.memberList.length / 5).toInt();
-
-        //Outer loop iterate for number of groups
-        for (int i = 0; i < widget.memberList.length; i += 5) {
-          List<String> group = [];
-
+      //Outer loop iterate for number of groups
+      for (int i = 0; i < widget.memberList.length; i += 5) {
+        List<String> group = [];
+        //Check memberList
+        if (widget.memberList.length % 5 < 4 &&
+            i + 5 >= widget.memberList.length) {
+          //Randomly divide remaining to groups
+          for (int k = i + group.length; k < widget.memberList.length; k++) {
+            groups[Random().nextInt(groups.length)].add(widget.memberList[k]);
+          }
+        } else {
+          //Sequentially divide
           for (int j = i; j < i + 5 && j < widget.memberList.length; j++) {
             group.add(widget.memberList[j]);
           }
-          divideGroups(group);
-          print(group);
+          groups.add(group);
         }
       }
     });
-
-    //Need to add remainber below 3 and 4 also
   }
 
   @override
@@ -84,12 +79,19 @@ class _GroupListsState extends State<GroupLists> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ListTile(
-                        title: Text("Group ${i + 1}", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),textColor: Colors.blue,
+                        title: Text(
+                          "Group ${i + 1}",
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        textColor: Colors.blue,
                       ),
                       for (int j = 0; j < groups[i].length; j++)
                         Padding(
                           padding: const EdgeInsets.all(2.0),
-                          child: Text("${j + 1}) ${groups[i][j]}\n",style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          child: Text("${j + 1}) ${groups[i][j]}\n",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16)),
                         )
                     ],
                   ),
@@ -98,6 +100,7 @@ class _GroupListsState extends State<GroupLists> {
   }
 }
 
+//Ideal members for a group --> 5
 //Maximum members for a group --> 6
 //Minimum members for a group --> 4
 

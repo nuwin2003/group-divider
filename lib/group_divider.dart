@@ -150,7 +150,8 @@ class _AddListContainsState extends State<AddListContains> {
   }
 
   bool isMembersEnough() {
-    if (memberList.length >= 8) {
+    //Minimum number of members --> 14 (If it is not can't divide remaining members to groups)
+    if (memberList.length >= 14) {
       return true;
     } else {
       return false;
