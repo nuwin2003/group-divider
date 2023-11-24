@@ -33,7 +33,12 @@ class _GroupListsState extends State<GroupLists> {
             i + 5 >= widget.memberList.length) {
           //Randomly divide remaining to groups
           for (int k = i + group.length; k < widget.memberList.length; k++) {
-            groups[Random().nextInt(groups.length)].add(widget.memberList[k]);
+            int randomGroup = Random().nextInt(groups.length);
+            //Check whether randomGroup names below 6
+            while (groups[randomGroup].length >= 6) {
+              randomGroup = Random().nextInt(groups.length);
+            }
+            groups[randomGroup].add(widget.memberList[k]);
           }
         } else {
           //Sequentially divide
